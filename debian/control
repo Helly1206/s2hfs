@@ -1,0 +1,16 @@
+Source: s2hfs
+Section: net
+Priority: optional
+Maintainer: Helly1206
+Build-Depends: debhelper (>= 9)
+Standards-Version: 3.9.6
+XB-Plugin-Section: sharing
+
+Package: s2hfs
+Architecture: all
+Depends: python3,
+         python3-pip,
+         sshpass,
+         sshfs,
+         ${misc:Depends}
+Description: s2hfs (sshfs wrapper for auto login)

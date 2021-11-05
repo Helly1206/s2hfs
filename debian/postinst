@@ -1,0 +1,17 @@
+#!/bin/bash
+
+NAME="s2hfs"
+SBINDIR="/sbin"
+OPTDIR="/opt"
+OPTLOC="$OPTDIR/$NAME"
+PY=".py"
+S2HFS="mount.$NAME"
+SBINS2HFS="$SBINDIR/$NAME"
+SBINMNTS2HFS="$SBINDIR/$S2HFS"
+PYS2HFS="$OPTLOC/$NAME$PY"
+
+echo "Installing binaries"
+ln -s $PYS2HFS $SBINS2HFS
+ln -s $PYS2HFS $SBINMNTS2HFS
+
+exit 0

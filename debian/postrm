@@ -1,0 +1,14 @@
+#!/bin/bash
+
+NAME="s2hfs"
+SBINDIR="/sbin"
+S2HFS="mount.$NAME"
+SBINS2HFS="$SBINDIR/$NAME"
+SBINMNTS2HFS="$SBINDIR/$S2HFS"
+
+# Remove links
+echo "Removing binaries"
+[ -L $SBINS2HFS ] && unlink $SBINS2HFS
+[ -L $SBINMNTS2HFS ] && unlink $SBINMNTS2HFS
+
+exit 0
