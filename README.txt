@@ -8,12 +8,69 @@ sshfs is a module to mount sftp as a filesystem. However logging in using a pass
 Run from command line:
 === ==== ======= =====
 
-TBD
+s2hfs: sshfs wrapper for easy automatic login on mount
+Usage:
+    s2hfs <arguments> <options>
+    <arguments>:
+        <service>   : url of ssh service
+        <mountpoint>: mountpoint to mount to
+    <options>:
+        -h, --help             : this help file
+        -v, --version          : print version information
+        -s, --sshfshelp        : shows sshfs help and options
+        -c, --credentialsadd   : adds credentials to credentials file
+        -k, --keyadd           : generates, installs key and stores in key file
+        -C, --credentialsdelete: delete credentials file
+        -K, --keydelete        : uninstalls and deletes key file
+        -f, --folder           : folder to mount if not in <service> format
+        -u, --username         : username if not in <service> format
+        -p, --password         : password to use
+        -n, --nouser           : do not allow user to access mount (-o nouser)
+        -N, --nokeep           : auto unmount when not accessed (-o nokeep)
+        -o, --noautoaccept     : Do not auto accept new hosts (-o noautoaccept)
+        -O, --options          : default mount options
+
+<service> is in format: [username@]host:[folder]
+Common usage:
+    mount.s2hfs <service> <mountpoint> [-o options]
+For adding credentials/ keys:
+    mount.s2hfs <service> -c -p password (or interactive if omitted)
+    mount.s2hfs <service> -k -p password (or interactive if omitted)
+For deleting credentials/ keys:
+    mount.s2hfs <service> -C/K
 
 Integrate in fstab/ systemd-mount:
 ========= == ====== ==============
 
-TBD
+fstab:
+[username@]host:[folder]	/mnt/MOUNTPOINT	s2hfs	_netdev,OTHER_MOUNT_OPTIONS	0	0
+
+systemd-mount:
+mnt-MOUNTPOINT.mount
+--------------------------------------------------------------
+[Unit]
+Descritpion=whatever you want to mention here
+
+[Mount]
+Where=/mnt/MOUNTPOINT
+What=[username@]host:[folder]
+Type=s2hfs
+TimeoutSec=10s
+Options=_netdev,OTHER_MOUNT_OPTION
+--------------------------------------------------------------
+
+Automount is also possible in fstab (add x-systemd.automount as option)
+
+or in systemd:
+mnt-MOUNTPOINT.automount
+--------------------------------------------------------------
+[Unit]
+Descritpion=whatever you want to mention here
+
+[Automount]
+Where=/mnt/MOUNTPOINT
+TimeoutIdleSec=30s
+--------------------------------------------------------------
 
 Installation:
 =============
