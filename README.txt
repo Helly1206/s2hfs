@@ -1,4 +1,4 @@
-s2hfs v0.8.0
+s2hfs v0.8.2
 
 s2hfs -- sshfs wrapper for easy automatic login on mount
 ===== == ===== ======= === ==== ========= ===== == =====
@@ -22,12 +22,15 @@ Usage:
         -k, --keyadd           : generates, installs key and stores in key file
         -C, --credentialsdelete: delete credentials file
         -K, --keydelete        : uninstalls and deletes key file
+        -r, --credentialsget   : return username if credentials exist
+        -e, --keyget           : return key file location if key exists
         -f, --folder           : folder to mount if not in <service> format
         -u, --username         : username if not in <service> format
         -p, --password         : password to use
         -n, --nouser           : do not allow user to access mount (-o nouser)
         -N, --nokeep           : auto unmount when not accessed (-o nokeep)
         -o, --noautoaccept     : Do not auto accept new hosts (-o noautoaccept)
+        -F, --force            : force deletion of keys and keys files
         -O, --options          : default mount options
 
 <service> is in format: [username@]host:[folder]
@@ -65,7 +68,7 @@ or in systemd:
 mnt-MOUNTPOINT.automount
 --------------------------------------------------------------
 [Unit]
-Descritpion=whatever you want to mention here
+Description=whatever you want to mention here
 
 [Automount]
 Where=/mnt/MOUNTPOINT

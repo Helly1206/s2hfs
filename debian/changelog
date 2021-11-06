@@ -1,3 +1,11 @@
+s2hfs (0.82) stable; urgency=low
+
+  * Check for key existence before adding key
+  * Add option to force key deletion
+  * Add option to get key file and credentials user
+
+ -- Helly1206 <hellyrulez@hotmail.com>  Sat, 06 Nov 2021 18:03:27 +0100
+
 s2hfs (0.80) stable; urgency=low
 
   * Initial s2hfs release

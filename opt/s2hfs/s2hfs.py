@@ -80,6 +80,9 @@ class s2hfs(options, sshfs):
                 sys.stderr.write("Error: invalid username\n")
                 exit(1)
             self.settings["password"] = self.enterPassword(self.settings["password"])
+            if self.keys.available(self.settings["host"], self.settings["username"]):
+                sys.stderr.write("Error: key already exists. Delete key first beofre adding a new one\n")
+                exit(1)
             retval = self.keys.generateKeyFiles(self.settings["host"], self.settings["username"], self.settings["password"])
             if not retval["result"]:
                 sys.stderr.write("Error: error occured when generating or installing key file\n{}\n".format(retval["text"]))
@@ -113,19 +116,50 @@ class s2hfs(options, sshfs):
                 sys.stderr.write("Error: invalid username\n")
                 exit(1)
             self.settings["password"] = self.enterPassword(self.settings["password"])
+            force = ("force" in self.settings)
             key = self.keys.getKey(self.settings["host"], self.settings["username"])
             if not key:
                 sys.stderr.write("Error: key file not found\n")
                 exit(1)
-            retval = self.keys.removeKeyFiles(self.settings["host"], self.settings["username"], self.settings["password"], key["idFile"])
+            retval = self.keys.removeKeyFiles(self.settings["host"], self.settings["username"], self.settings["password"], key["idFile"], force)
             if not retval["result"]:
                 sys.stderr.write("Error: removing key files\n{}\n".format(retval["text"]))
-                exit(1)
-            retval = self.keys.delKey(self.settings["host"], self.settings["username"])
-            if not retval:
+                if not force:
+                    exit(1)
+            retval2 = self.keys.delKey(self.settings["host"], self.settings["username"])
+            if not retval2:
                 sys.stderr.write("Error: keys not deleted\n")
+                if not force:
+                    exit(1)
+            if not retval["result"] or not retval2:
+                sys.stderr.write("Error: errors occured in deleting keys, you may have to delete them manually\n")
                 exit(1)
-            print("Keys deleted and uninstalled")
+            else:
+                print("Keys deleted and uninstalled")
+                exit(0)
+        elif "credentialsget" in self.settings:
+            cred = {}
+            cred["username"] = ""
+            self.needSudo()
+            self.settings["username"] = self.enterUsername(self.settings["username"])
+            if not self.settings["username"]:
+                sys.stderr.write("Error: invalid username\n")
+                exit(1)
+            if self.credentials.available(self.settings["host"], self.settings["username"]):
+                cred = self.credentials.getCredentials(self.settings["host"], self.settings["username"])
+            print(cred["username"])
+            exit(0)
+        elif "keyget" in self.settings:
+            key = {}
+            key["idFile"] = ""
+            self.needSudo()
+            self.settings["username"] = self.enterUsername(self.settings["username"])
+            if not self.settings["username"]:
+                sys.stderr.write("Error: invalid username\n")
+                exit(1)
+            if self.keys.available(self.settings["host"], self.settings["username"]):
+                key = self.keys.getKey(self.settings["host"], self.settings["username"])
+            print(key["idFile"])
             exit(0)
         else:
             self.needSudo()
@@ -151,12 +185,15 @@ class s2hfs(options, sshfs):
                  "keyadd": "generates, installs key and stores in key file",
                  "credentialsdelete": "delete credentials file",
                  "keydelete": "uninstalls and deletes key file",
+                 "credentialsget": "return username if credentials exist",
+                 "keyget": "return key file location if key exists",
                  "folder": "folder to mount if not in <service> format",
                  "username": "username if not in <service> format",
                  "password": "password to use",
                  "nouser": "do not allow user to access mount (-o nouser)",
                  "nokeep": "auto unmount when not accessed (-o nokeep)",
-                 "noautoaccept": "Do not auto accept new hosts (-o noautoaccept)"}
+                 "noautoaccept": "do not auto accept new hosts (-o noautoaccept)",
+                 "force": "force deletion of keys and keys files"}
         specopts = {"options": "default mount options"}
         extra = ('<service> is in format: [username@]host:[folder]\n'
                  'Common usage:\n'
@@ -178,7 +215,7 @@ class s2hfs(options, sshfs):
 
         if not self.settings["service"] and not ("sshfshelp" in optsnargs[0]) and not ("version" in optsnargs[0]):
             self.parseError("Not enough arguments, no service defined")
-        optlist = ["sshfshelp", "version", "credentialsadd", "keyadd", "credentialsdelete", "keydelete"]
+        optlist = ["sshfshelp", "version", "credentialsadd", "keyadd", "credentialsdelete", "keydelete", "credentialsget", "keyget"]
         if not self.settings["mountpoint"] and not any(item in optlist for item in optsnargs[0]):
             self.parseError("Not enough arguments, no mountpoint defined")
 

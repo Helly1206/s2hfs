@@ -1,2 +1,7 @@
+[B]0.8.2[/B]
+- Check for key existence before adding key
+- Add option to force key deletion
+- Add option to get key file and credentials user
+
 [B]0.8.0[/B]
 - Initial release

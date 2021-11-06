@@ -78,11 +78,14 @@ class keys(object):
             retval = self.SshKeysInstall(host, username, password, retval["idFile"])
         return retval
 
-    def removeKeyFiles(self, host, username, password, idFile):
+    def removeKeyFiles(self, host, username, password, idFile, force = False):
         retval = self.SshKeysUninstall(host, username, password, idFile)
 
-        if retval["result"]:
-            retval = self.SshKeysRemove(idFile)
+        if retval["result"] or force:
+            if force and not retval["result"]:
+                self.SshKeysRemove(idFile)
+            else:
+                retval = self.SshKeysRemove(idFile)
         return retval
 
     ################## INTERNAL FUNCTIONS ###################
