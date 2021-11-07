@@ -1,3 +1,9 @@
+s2hfs (0.84) stable; urgency=low
+
+  * Store passphrase in key file to be able to remove key without entering passphrase
+
+ -- Helly1206 <hellyrulez@hotmail.com>  Sun, 07 Nov 2021 10:10:51 +0100
+
 s2hfs (0.82) stable; urgency=low
 
   * Check for key existence before adding key

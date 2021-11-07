@@ -81,7 +81,7 @@ class s2hfs(options, sshfs):
                 exit(1)
             self.settings["password"] = self.enterPassword(self.settings["password"])
             if self.keys.available(self.settings["host"], self.settings["username"]):
-                sys.stderr.write("Error: key already exists. Delete key first beofre adding a new one\n")
+                sys.stderr.write("Error: key already exists. Delete key first before adding a new one\n")
                 exit(1)
             retval = self.keys.generateKeyFiles(self.settings["host"], self.settings["username"], self.settings["password"])
             if not retval["result"]:
@@ -90,7 +90,7 @@ class s2hfs(options, sshfs):
             elif not retval["idFile"]:
                 sys.stderr.write("Error: error occured when generating or installing key file\n")
                 exit(1)
-            self.keys.addKey(self.settings["host"], self.settings["username"], retval["idFile"])
+            self.keys.addKey(self.settings["host"], self.settings["username"], self.settings["password"], retval["idFile"])
             print("Keys generated and installed")
             exit(0)
         elif "credentialsdelete" in self.settings:
@@ -115,12 +115,16 @@ class s2hfs(options, sshfs):
             if not self.settings["username"]:
                 sys.stderr.write("Error: invalid username\n")
                 exit(1)
-            self.settings["password"] = self.enterPassword(self.settings["password"])
             force = ("force" in self.settings)
             key = self.keys.getKey(self.settings["host"], self.settings["username"])
             if not key:
                 sys.stderr.write("Error: key file not found\n")
                 exit(1)
+            if not self.settings["password"]:
+                if key["password"]:
+                    self.settings["password"] = key["password"]
+                else:
+                    self.settings["password"] = self.enterPassword(self.settings["password"])
             retval = self.keys.removeKeyFiles(self.settings["host"], self.settings["username"], self.settings["password"], key["idFile"], force)
             if not retval["result"]:
                 sys.stderr.write("Error: removing key files\n{}\n".format(retval["text"]))

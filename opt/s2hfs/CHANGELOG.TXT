@@ -1,3 +1,6 @@
+[B]0.8.4[/B]
+- Store passphrase in key file to be able to remove key without entering passphrase
+
 [B]0.8.2[/B]
 - Check for key existence before adding key
 - Add option to force key deletion

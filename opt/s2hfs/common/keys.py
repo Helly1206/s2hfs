@@ -43,12 +43,12 @@ class keys(object):
             retval = True
         return retval
 
-    def addKey(self, host, username, idFile):
+    def addKey(self, host, username, password, idFile):
         retval = True
         if self.hasKeysFile(host):
             self.delKey(host, username)
         self.checkKeysFile(host)
-        self.addKey_(host, username, idFile)
+        self.addKeyToFile(host, username, password, idFile)
         return retval
 
     def delKey(self, host, username, idFile = ""):
@@ -114,7 +114,12 @@ class keys(object):
                         if len(content) > 1:
                             if content[0] == username or not username:
                                 key['username'] = content[0]
-                                key['idFile'] = content[1]
+                                if len(content) > 2: # containing password
+                                    key['password'] = content[1]
+                                    key['idFile'] = content[2]
+                                else: # old implementation without password
+                                    key['password'] = ""
+                                    key['idFile'] = content[1]
                                 key['line'] = linenr
                                 break
                 linenr += 1
@@ -130,7 +135,7 @@ class keys(object):
         with open(keysfile, "wt") as fp:
             fp.writelines(lines)
 
-    def addKey_(self, host, username, idFile):
+    def addKeyToFile(self, host, username, password, idFile):
         keysfile = self.getKeysFile(host)
         with open(keysfile, "rt") as fp:
             filetext = str(fp.read())
@@ -139,7 +144,7 @@ class keys(object):
             newline = ""
 
         with open(keysfile, "at") as fp:
-            fp.writelines(["{}{}::{}".format(newline, username, idFile)])
+            fp.writelines(["{}{}::{}::{}".format(newline, username, password, idFile)])
 
     def removeKeysFile(self, host):
         keysfile = self.getKeysFile(host)
