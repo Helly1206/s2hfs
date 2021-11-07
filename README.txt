@@ -1,4 +1,4 @@
-s2hfs v0.8.4
+s2hfs v0.8.5
 
 s2hfs -- sshfs wrapper for easy automatic login on mount
 ===== == ===== ======= === ==== ========= ===== == =====

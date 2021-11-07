@@ -1,3 +1,9 @@
+s2hfs (0.85) stable; urgency=low
+
+  * Small bugfix is parsing username from service
+
+ -- Helly1206 <hellyrulez@hotmail.com>  Sun, 07 Nov 2021 11:31:47 +0100
+
 s2hfs (0.84) stable; urgency=low
 
   * Store passphrase in key file to be able to remove key without entering passphrase

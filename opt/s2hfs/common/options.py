@@ -14,7 +14,7 @@ import getpass
 #########################################################
 
 ####################### GLOBALS #########################
-VERSION = "0.8.4"
+VERSION = "0.8.5"
 HELPSTANDARD     = {"help": "this help file",
                     "version": "print version information"}
 NOARGS           = "no arguments"

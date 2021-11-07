@@ -232,14 +232,18 @@ class s2hfs(options, sshfs):
                     self.settings["folder"] = hostfolder[1]
                 else:
                     self.settings["folder"] = "/"
+            servuserloc = self.settings["host"].split("@")
             if not "username" in optsnargs[0]:
-                servuserloc = self.settings["host"].split("@")
                 if len(servuserloc) > 1:
                     self.settings["username"] = servuserloc[0]
                     self.settings["host"] = "@".join(servuserloc[1:])
                 else:
                     self.settings["username"] = ""
                     self.settings["host"] = self.settings["host"]
+            elif len(servuserloc) > 1:
+                if self.settings["username"] == servuserloc[0]:
+                    self.settings["host"] = "@".join(servuserloc[1:])
+
 
         self.settings.update(optsnargs[0])
         self.settings.update(optsnargs[2])
