@@ -241,9 +241,8 @@ class s2hfs(options, sshfs):
                     self.settings["username"] = ""
                     self.settings["host"] = self.settings["host"]
             elif len(servuserloc) > 1:
-                if self.settings["username"] == servuserloc[0]:
+                if optsnargs[0]["username"] == servuserloc[0]:
                     self.settings["host"] = "@".join(servuserloc[1:])
-
 
         self.settings.update(optsnargs[0])
         self.settings.update(optsnargs[2])

@@ -1,6 +1,6 @@
-s2hfs (0.85) stable; urgency=low
+s2hfs (0.86) stable; urgency=low
 
-  * Small bugfix is parsing username from service
+  * Small bugfix in parsing username from service
 
  -- Helly1206 <hellyrulez@hotmail.com>  Sun, 07 Nov 2021 11:31:47 +0100
 
